@@ -12,6 +12,25 @@
 
 */
 
+uint8_t advdata[] =
+{
+  14,    // length // 0
+  0x09,  // complete local name type // 1
+  0x47,  // 'G' // 2
+  0x61,  // 'a' // 3
+  0x6E,  // 'n' // 4
+  0x67,  // 'g' // 5
+  0x6C,  // 'l' // 6
+  0x69,  // 'i' // 7
+  0x6F,  // 'o' // 8
+  0x6E,  // 'n' // 9
+  0x2D,  // '-' // 10
+  0x54,  // 'T' // 11
+  0x41,  // 'A' // 12
+  0x43,  // 'C' // 13
+  0x4f,  // 'O' // 14
+};
+
 void ganglionConstruct(){
   SPI.begin();
   SPI.setFrequency(4000);
@@ -36,6 +55,11 @@ void ganglionConstruct(){
 // <<<<<<<<<<<<<<<<<<<<<<<<<  BOARD WIDE FUNCTIONS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 void ganglionInitialize(){
+    makeUniqueId();
+
+    SimbleeBLE_advdata = advdata;
+    SimbleeBLE_advdata_len = sizeof(advdata);
+
 
   if(useSerial){
     Serial.begin(115200);
@@ -46,6 +70,16 @@ void ganglionInitialize(){
   }
   startFromScratch(gain, sps);
   thatTime = micros();
+}
+
+
+void makeUniqueId() {
+//  uint64_t id = getDeviceId();
+  String stringy =  String(getDeviceIdLow(), HEX);
+  advdata[11] = (uint8_t)stringy.charAt(0);
+  advdata[12] = (uint8_t)stringy.charAt(1);
+  advdata[13] = (uint8_t)stringy.charAt(2);
+  advdata[14] = (uint8_t)stringy.charAt(3);
 }
 
 
@@ -771,7 +805,7 @@ void LIS2DH_readAllRegs_Serial(){
 
 
 void config_MCP3912(unsigned long gain, unsigned long sampleRate){
-  sampleRate |= 0x003CE050; // dither on max, boost 2x, OSR 4096, 
+  sampleRate |= 0x003CE050; // dither on max, boost 2x, OSR 4096,
   digitalWrite(MCP_RST,LOW); delay(50);
   digitalWrite(MCP_RST,HIGH); delay(100);
   digitalWrite(MCP_SS,LOW);
@@ -1080,7 +1114,7 @@ void parseChar(char token){
     case '$':
       changeChannelState_maintainRunningState(4,ACTIVATE); break;
 
-    case 'b':
+    case 't':
       if(!is_running || BLEconnected){ Serial.println("start running"); }
       sampleCounter = 0xFF;
 //      enable_LIS2DH();
@@ -1119,7 +1153,7 @@ void parseChar(char token){
       if(!is_running || BLEconnected){ Serial.print("060110"); sendEOT(); }
       break;
 
-    case 't':  // RUNS A TIMED TEST AND REPORTS TO SERIAL PORT
+    case 'b':  // RUNS A TIMED TEST AND REPORTS TO SERIAL PORT
       timeDataTest = true;  // will run until the number of samples is reached
       thatTestTime = micros();
       sampleCounter = 0xFF;
