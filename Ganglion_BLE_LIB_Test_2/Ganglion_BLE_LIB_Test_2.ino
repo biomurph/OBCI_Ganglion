@@ -25,13 +25,12 @@
 
 
 
-void setup() {
 
+void setup() {
   ganglionConstruct();
   ganglionInitialize();
-  
-}
 
+}
 
 void loop() {
 
@@ -45,7 +44,7 @@ void loop() {
       }
     }
 
-  
+
     if(MCP_dataReady){
       MCP_dataReady = false;
       if(sampleCounter == 0xFF){ sampleCounter = 0x00; }
@@ -117,7 +116,7 @@ void loop() {
 //  } // end ACwaveTest
 
 
-    
+
 //  if(Z_noiseTesting){
 //    if(micros() - sampleTimer > noiseSampleTime){
 //      logData_Serial();
@@ -130,16 +129,12 @@ void loop() {
 //  if(rampTesting){ rampTest(); }
 
 
-   
+
 
 //  if(zero){ gotoTarget(0.0,0.05); }
 //  if(plusTen){ gotoTarget(10.0,0.05); }
 //  if(minusTen){ gotoTarget(-10.0,0.05); }
 
-    
+
 
 } // end of loop
-
-
-
-
