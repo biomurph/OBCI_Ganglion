@@ -34,7 +34,7 @@ void setup() {
 
 void loop() {
 
-    if(timeDataTest){
+    if(timeDataTest){ 
       thisTestTime = micros();
       if(thisTestTime - thatTestTime > 10000){
         thatTestTime = thisTestTime;

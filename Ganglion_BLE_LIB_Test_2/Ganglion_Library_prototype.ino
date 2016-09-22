@@ -805,7 +805,7 @@ void LIS2DH_readAllRegs_Serial(){
 
 
 void config_MCP3912(unsigned long gain, unsigned long sampleRate){
-  sampleRate |= 0x003CE050; // dither on max, boost 2x, OSR 4096,
+  sampleRate |= 0x003CF050; // dither on max, boost 2x, OSR 4096,
   digitalWrite(MCP_RST,LOW); delay(50);
   digitalWrite(MCP_RST,HIGH); delay(100);
   digitalWrite(MCP_SS,LOW);
@@ -1114,7 +1114,7 @@ void parseChar(char token){
     case '$':
       changeChannelState_maintainRunningState(4,ACTIVATE); break;
 
-    case 't':
+    case 'b':
       if(!is_running || BLEconnected){ Serial.println("start running"); }
       sampleCounter = 0xFF;
 //      enable_LIS2DH();
@@ -1153,7 +1153,7 @@ void parseChar(char token){
       if(!is_running || BLEconnected){ Serial.print("060110"); sendEOT(); }
       break;
 
-    case 'b':  // RUNS A TIMED TEST AND REPORTS TO SERIAL PORT
+    case 't':  // RUNS A TIMED TEST AND REPORTS TO SERIAL PORT
       timeDataTest = true;  // will run until the number of samples is reached
       thatTestTime = micros();
       sampleCounter = 0xFF;
